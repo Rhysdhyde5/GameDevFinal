@@ -149,6 +149,7 @@ public class PlayerIdle : IPlayerState
     public void Enter(Frogger frogger)
     {
         //Debug.Log("Idle");
+        frogger.ChangeToIdleDelay();
         return;
     }
 
@@ -190,7 +191,7 @@ public class PlayerUp : IPlayerState
 
     public void Exit(Frogger frogger)
     {
-        frogger.ChangeToIdleDelay();
+        return;
     }
 }
 public class PlayerDown : IPlayerState
@@ -214,7 +215,6 @@ public class PlayerDown : IPlayerState
 
     public void Exit(Frogger frogger)
     {
-        frogger.ChangeToIdleDelay();
         return;
     }
 }
@@ -242,7 +242,6 @@ public class PlayerLeft : IPlayerState
 
     public void Exit(Frogger frogger)
     {
-        frogger.ChangeToIdleDelay();
         return;
     }
 }
@@ -269,7 +268,6 @@ public class PlayerRight : IPlayerState
 
     public void Exit(Frogger frogger)
     {
-        frogger.ChangeToIdleDelay();
         return;
     }
 }
@@ -285,7 +283,6 @@ public class Frogger : MonoBehaviour, IEntity
 {
     private IPlayerState currentState = new PlayerIdle();
     private FroggerInput _input;
-    
     private SpriteRenderer spriteRenderer;
     public Sprite idleSprite;
     public Sprite leapSprite;
@@ -300,6 +297,7 @@ public class Frogger : MonoBehaviour, IEntity
 
     public void ChangeToIdleDelay()
     {
+        CancelInvoke();
         Invoke(nameof(ChangeToIdle), 0.1f);
     }
 
@@ -337,12 +335,11 @@ public class Frogger : MonoBehaviour, IEntity
     {
         Debug.Log("death");
         StopAllCoroutines();
-       
+        CancelInvoke();
         enabled = false;
         transform.rotation = Quaternion.identity;
         spriteRenderer.sprite = deadSprite;
         transform.SetParent(null);
-
         FindObjectOfType<GameManager>().Died();
 
     }
@@ -353,7 +350,6 @@ public class Frogger : MonoBehaviour, IEntity
         transform.rotation = Quaternion.identity;
         transform.position = spawnPosition;
         farthestRow = spawnPosition.y;
-
         spriteRenderer.sprite = idleSprite;
 
         gameObject.SetActive(true);
@@ -364,17 +360,6 @@ public class Frogger : MonoBehaviour, IEntity
     public void AdvanceRow()
     {
         FindObjectOfType<GameManager>().AdvancedRow(transform.position.y);
-    }
-    
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        bool hitObstacle = other.gameObject.layer == LayerMask.NameToLayer("Obstacle");
-        bool onPlatform = transform.parent != null;
-
-        if (enabled && hitObstacle && !onPlatform) {
-            Debug.Log("trigger");
-            Death();
-        }
     }
 }
 
