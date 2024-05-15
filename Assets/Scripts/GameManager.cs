@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     {
         gameOverMenu.SetActive(false);
         stopTimer.SetActive(false);
-        farthestRow = 0;
+        farthestRow = -6;
 
         ResetGame();
     }
@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
 
         int bonusPoints = time * 20;
         SetScore(score + bonusPoints + 50);
+        farthestRow = -6;
         
         if (Cleared())
         {

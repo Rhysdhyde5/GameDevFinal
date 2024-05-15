@@ -30,7 +30,9 @@ public class UpCommand : Command
     {
         Vector3 destination = entity.transform.position + Vector3.up;
         
-        Collider2D platform = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Platform"));
+        Collider2D platform = Physics2D.OverlapBox(destination, Vector2.zero,
+            0f, LayerMask.GetMask("Platform"));
+        
         if (platform != null)
         {
             entity.transform.SetParent(platform.transform);
@@ -40,7 +42,9 @@ public class UpCommand : Command
             entity.transform.SetParent(null);
         }
 
-        Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Obstacle"));
+        Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero,
+            0f, LayerMask.GetMask("Obstacle"));
+        
         if (obstacle != null && platform == null)
         {
             entity.transform.position = destination;
@@ -174,7 +178,7 @@ public class PlayerUp : IPlayerState
 
     public void Enter(Frogger frogger)
     {
-        //Debug.Log("up");
+        Debug.Log("up");
         frogger.ChangeToLeap(); 
         upCommand = new UpCommand(frogger);
         upCommand.Execute();
@@ -333,7 +337,6 @@ public class Frogger : MonoBehaviour, IEntity
     
     public void Death()
     {
-        Debug.Log("death");
         StopAllCoroutines();
         CancelInvoke();
         enabled = false;
@@ -361,5 +364,16 @@ public class Frogger : MonoBehaviour, IEntity
     {
         FindObjectOfType<GameManager>().AdvancedRow(transform.position.y);
     }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        bool hitObstacle = other.gameObject.layer == LayerMask.NameToLayer("Obstacle");
+        bool onPlatform = transform.parent != null;
+
+        if (enabled && hitObstacle && !onPlatform) {
+            Death();
+        }
+    }
+    
 }
 
