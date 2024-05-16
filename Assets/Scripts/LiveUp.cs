@@ -8,14 +8,12 @@ public class LiveUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Access the GameManager script to add a life
             GameManager gameManager = FindObjectOfType<GameManager>();
             if (gameManager != null)
             {
                 gameManager.AddLife();
             }
 
-            // Deactivate the powerup object
             gameObject.SetActive(false);
         }
     }
