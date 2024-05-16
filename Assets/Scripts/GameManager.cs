@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     public int Lives => lives;
     public int Score => score;
     public int Time => time;
-    private float farthestRow;
+    private float farthestRow = -6;
+
 
 
     private void Awake()
@@ -46,9 +47,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < homes.Length; i++) {
             homes[i].enabled = false;
         }
+        farthestRow = -6;
 
         Respawn();
     }
+
 
     private void Respawn()
     {
@@ -99,16 +102,22 @@ public class GameManager : MonoBehaviour
 
         int bonusPoints = time * 20;
         SetScore(score + bonusPoints + 50);
-        farthestRow = -6;
         
         if (Cleared())
         {
             SetLives(lives + 1);
             SetScore(score + 1000);
+            home1 = 0;
+            home2 = 0;
+            home3 = 0;
+            home4 = 0;
+            home5 = 0;
+
             Invoke(nameof(NewLevel), 1f);
         }
         else
         {
+            farthestRow = -6;
             Invoke(nameof(Respawn), 1f);
             SavePlayer();
         }
@@ -262,6 +271,7 @@ public class GameManager : MonoBehaviour
         home5 = 0;
         NewLevel();
         SavePlayer();
+        farthestRow = -6;
 
     }
 }

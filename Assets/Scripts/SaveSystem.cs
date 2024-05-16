@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    private const string FILE_PATH = "/save1";
+    private const string FILE_PATH = "/save3";
     public static void SavePlayer(int score, int lives, int home1, int home2, int home3, int home4, int home5){
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + FILE_PATH;
